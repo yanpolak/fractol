@@ -6,69 +6,41 @@
 /*   By: ymarival <ymarival@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 16:34:34 by ymarival          #+#    #+#             */
-/*   Updated: 2023/02/23 13:07:51 by ymarival         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:57:48 by ymarival         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 #include "mlx.h"
 #include "keys.h"
-/*
-static	int	mouse_handler(int button, int x, int y, void *param)
-{
-	t_fractol	*frac;
-	t_complex	p;
 
-	frac = param;
-	p = init_complex(frac->corner.real + frac->zoom * x / WIDTH, \
-						frac->corner.imag - frac->zoom * y / HEIGHT);
+static	int	mouse_handler(int button, int x, int y, void *param)
+{	
+	double		mouse_imag;
+	double		mouse_real;
+	double		zoom_factor;
+	t_fractol	*frac;
+
+	frac = (t_fractol *)param;
+	mouse_real = frac->corner.real + frac->zoom * x / WIDTH;
+	mouse_imag = frac->corner.imag - frac->zoom * y / HEIGHT;
 	if (button == SCROLL_UP)
 	{
-		frac->zoom *= ZOOM_STEP;
-		frac->corner.real = (frac->corner.real - p.real) * ZOOM_STEP + p.real;
-		frac->corner.imag = (frac->corner.imag - p.imag) * ZOOM_STEP + p.imag;
+		zoom_factor = 1.0 / ZOOM_STEP;
+		frac->zoom *= zoom_factor;
+		frac->corner.real = mouse_real - frac->zoom * x / WIDTH;
+		frac->corner.imag = mouse_imag + frac->zoom * y / HEIGHT;
 	}
 	else if (button == SCROLL_DOWN)
 	{
-		frac->zoom /= ZOOM_STEP;
-		frac->corner.real = (frac->corner.real - p.real) * ZOOM_STEP + p.real;
-		frac->corner.imag = (frac->corner.imag - p.imag) * ZOOM_STEP + p.imag;
+		frac->zoom *= ZOOM_STEP;
+		frac->corner.real = mouse_real - frac->zoom * x / WIDTH;
+		frac->corner.imag = mouse_imag + frac->zoom * y / HEIGHT;
 	}
 	else
 		return (0);
 	draw(frac);
 	return (0);
-}
-*/
-
-static int mouse_handler(int button, int x, int y, void *param)
-{
-    t_fractol *frac = (t_fractol *)param;
-
-    double mouse_real = frac->corner.real + frac->zoom * x / WIDTH;
-    double mouse_imag = frac->corner.imag - frac->zoom * y / HEIGHT;
-
-    if (button == SCROLL_UP)
-    {
-        double zoom_factor = 1.0 / ZOOM_STEP;
-        frac->zoom *= zoom_factor;
-        frac->corner.real = mouse_real - frac->zoom * x / WIDTH;
-        frac->corner.imag = mouse_imag + frac->zoom * y / HEIGHT;
-    }
-    else if (button == SCROLL_DOWN)
-    {
-        frac->zoom *= ZOOM_STEP;
-        frac->corner.real = mouse_real - frac->zoom * x / WIDTH;
-        frac->corner.imag = mouse_imag + frac->zoom * y / HEIGHT;
-    }
-    else
-    {
-        return (0);
-    }
-
-    draw(frac);
-
-    return (0);
 }
 
 static int	key_handler2(int key_code, t_fractol *frac)
@@ -130,12 +102,4 @@ t_mlx	*init(t_fractol *fractol)
 	mlx_key_hook(mlx->win, key_handler, fractol);
 	mlx_hook(mlx->win, 17, 0, free_all, fractol);
 	return (mlx);
-}
-
-void	my_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = mlx->addr + (y * mlx->line_length + x * (mlx->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
 }

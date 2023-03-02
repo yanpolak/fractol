@@ -6,7 +6,7 @@
 /*   By: ymarival <ymarival@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 19:50:40 by ymarival          #+#    #+#             */
-/*   Updated: 2023/02/23 18:59:43 by ymarival         ###   ########.fr       */
+/*   Updated: 2023/03/02 19:18:12 by ymarival         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,8 @@
 Ce nombre complexe est calculé en fonction de la largeur
 et de la hauteur du pixel actuel, ainsi que de la position
 et du niveau de zoom de la fenêtre fractale.*/
-/*static t_complex	get_pos(size_t w, size_t h, t_fractol *fractol)
-{
-	return (init_complex(fractol->corner.real + fractol->zoom * w / WIDTH, \
-			fractol->corner.imag - fractol->zoom * h / HEIGHT));
-}*/
 
-static t_complex get_pos(size_t w, size_t h, t_fractol *fractol)
+static	t_complex	get_pos(size_t w, size_t h, t_fractol *fractol)
 {
 	double	real;
 	double	imag;
@@ -45,27 +40,14 @@ static	int	get_color(int depth, int max_depth, int color)
 					(depth + 7 * color + 8) % 16 * 16));
 }
 
-//paint est responsable du rendu de l'image fractale
-/*void	paint(t_fractol *fractol)
+void	my_mlx_pixel_put(t_mlx *mlx, int x, int y, int color)
 {
-	size_t	w;
-	size_t	h;
+	char	*dst;
 
-	w = 0;
-	while (w < WIDTH)
-	{
-		h = 0;
-		while (h < HEIGHT)
-		{
-			my_mlx_pixel_put(fractol->mlx, w, h, \
-			get_color(fractol->depth[w][h], MAX_ITERS, fractol->color));
-			++h;
-		}
-		++w;
-	}
-	mlx_put_image_to_window(fractol->mlx->mlx, fractol->mlx->win, \
-							fractol->mlx->img, 0, 0);
-}*/
+	dst = mlx->addr + (y * mlx->line_length + x * (mlx->bits_per_pixel / 8));
+	*(unsigned int *)dst = color;
+}
+//paint est responsable du rendu de l'image fractale
 
 void	paint(t_fractol *fractol)
 {
@@ -89,7 +71,7 @@ void	paint(t_fractol *fractol)
 }
 
 /*Cette fonction draw génère une carte de profondeur pour la fractale,
-puis peint la fractale sur la fenêtre en utilisant le paintune fonction.*/
+puis peint la fractale sur la fenêtre.*/
 
 void	draw(t_fractol *fractol)
 {

@@ -6,7 +6,7 @@
 #    By: ymarival <ymarival@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/21 13:37:24 by ymarival          #+#    #+#              #
-#    Updated: 2023/02/22 18:30:06 by ymarival         ###   ########.fr        #
+#    Updated: 2023/03/02 19:35:44 by ymarival         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ LIBS = -framework OpenGL -lm -framework AppKit
 NB = $(words $(FILES)
 
 %.o: %.c
-	@$(CC) -I ${HDRS} -c $< -o $@
+	@$(CC) -g -I ${HDRS} -c $< -o $@
 
 
 $(NAME): $(OBJ)
